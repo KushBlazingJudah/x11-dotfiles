@@ -85,7 +85,7 @@ export PATH="$HOME/.local/bin:$PATH"
 if [ -z "$DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
 	if command -v sway >/dev/null 2>&1; then
 		exec sway
-	else if command -v startx >/dev/null 2>&1; then
+	elif command -v startx >/dev/null 2>&1; then
 		exec startx
 	fi
 fi

@@ -1,0 +1,44 @@
+#!/bin/sh -e
+
+# Awful plumber, like Plan 9's but bad.
+# Doesn't clean up after itself when being piped but it rarely is.
+#
+# How to use:
+# - Find mime-type of desired format
+# - Create $PLUMBDIR/$mime as a shell script that does what you want
+# - Mark as executable
+# - Plumb away!
+
+PLUMBDIR="${PLUMBDIR:-"$HOME/.local/lib/plumb"}"
+
+detect() {
+	file --mime-type --brief "$1"
+}
+
+run() {
+	case "${a%%://*}" in
+		http*)
+			mime="url"
+			;;
+		*)
+			mime="$(detect "$file")"
+			;;
+	esac
+
+	if [ -e "$PLUMBDIR/$mime" ]; then
+		setsid -f "$PLUMBDIR/$mime" "$1"
+	else
+		exit 1
+	fi
+}
+
+if [ "$#" -eq 0 ]; then
+	# Reading from stdin; write to temp file
+	file="$(mktemp)"
+	cat > "$file" # write into it
+else
+	# Not from stdin
+	file="$1"
+fi
+
+run "$file"
