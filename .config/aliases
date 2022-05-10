@@ -9,3 +9,14 @@ alias rm="rm -i"
 alias ip="ip --color=auto"
 
 alias dg="git --git-dir=\"$HOME/.dotfiles\" --work-tree=\"$HOME\""
+
+case "$EDITOR" in
+	vim)
+		alias nvim="vim"
+		alias vi="vim"
+		;;
+	nvim)
+		alias vim="nvim"
+		alias vi="nvim"
+		;;
+esac

@@ -10,12 +10,9 @@ export TERMINAL="foot"
 # Set editor to nvim if it's there
 if command -v nvim >/dev/null 2>&1; then
 	export EDITOR="nvim"
-	alias vim="nvim"
 else
 	export EDITOR="vim"
-	alias nvim="vim"
 fi
-alias vi="$EDITOR"
 
 # Home directory cleanup
 export XDG_CACHE_HOME="$HOME/.cache"
