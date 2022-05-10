@@ -1,0 +1,9 @@
+# vim: set ft=sh:
+
+_sdcv="$(command -v sdcv)"
+sdcv() {
+	$_sdcv -n --utf8-output --color "$@" 2>&1 | \
+	fold --width=$(tput cols) | \
+	less -FRX
+}
+

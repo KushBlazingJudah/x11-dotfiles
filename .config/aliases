@@ -1,0 +1,11 @@
+# vim: set ft=sh:
+
+alias ls="ls --color=auto"
+alias la="ls -la"
+
+alias mv="mv -i"
+alias rm="rm -i"
+
+alias ip="ip --color=auto"
+
+alias dg="git --git-dir=\"$HOME/.dotfiles\" --work-tree=\"$HOME\""
