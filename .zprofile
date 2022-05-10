@@ -7,13 +7,6 @@
 export BROWSER="firefox"
 export TERMINAL="foot"
 
-# Set PS1 if on SSH
-if [ -n "$SSH_CONNECTION" ]; then
-	export PS1="%m%# "
-else
-	export PS1="%# "
-fi
-
 # Set editor to nvim if it's there
 if command -v nvim >/dev/null 2>&1; then
 	export EDITOR="nvim"
