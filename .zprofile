@@ -5,7 +5,7 @@
 
 # Default applications
 export BROWSER="firefox"
-export TERMINAL="foot"
+export TERMINAL="st"
 
 # Set editor to nvim if it's there
 if command -v nvim >/dev/null 2>&1; then

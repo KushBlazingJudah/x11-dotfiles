@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# X11 library.
+
+# Get a list of monitors.
+monitors() {
+	xrandr --listmonitors | tail -n +2 | while read -r line; do
+		echo "${line##* }"
+	done
+}
+
+# Turn off a monitor.
+monioff() {
+	xrandr --output "$1" --off
+}
