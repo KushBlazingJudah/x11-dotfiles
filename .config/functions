@@ -1,9 +1,11 @@
 # vim: set ft=sh:
 
-_sdcv="$(command -v sdcv)"
+if [ -z "$_sdcv" ]; then
+	_sdcv="$(command -v sdcv)"
+fi
+
 sdcv() {
 	$_sdcv -n --utf8-output --color "$@" 2>&1 | \
-	fold --width=$(tput cols) | \
-	less -FRX
+	fold -w $(tput cols)
 }
 

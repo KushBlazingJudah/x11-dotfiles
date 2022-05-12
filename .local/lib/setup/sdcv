@@ -1,0 +1,20 @@
+#!/bin/sh
+
+if [ "$(id -u)" -ne 0 ]; then
+	echo "You must run this as root."
+	exit 1
+fi
+
+mkdir -pv /usr/share/stardict/dic
+
+while read -r line; do
+        [ -z "$line" ] && continue;
+
+	curl -fL "$line" | tar --strip-components=1 -C /usr/share/stardict/dic -xjvf -
+done <<EOF
+https://web.archive.org/web/20200630200122/http://download.huzheng.org/dict.org/stardict-dictd_www.dict.org_wn-2.4.2.tar.bz2
+https://web.archive.org/web/20200630200122/http://download.huzheng.org/dict.org/stardict-dictd-vera-2.4.2.tar.bz2
+https://web.archive.org/web/20200630200122/http://download.huzheng.org/dict.org/stardict-dictd-jargon-2.4.2.tar.bz2
+https://web.archive.org/web/20200630200122/http://download.huzheng.org/dict.org/stardict-dictd-world02-2.4.2.tar.bz2
+https://web.archive.org/web/20200630200122/http://download.huzheng.org/dict.org/stardict-oald-2.4.2.tar.bz2
+EOF
