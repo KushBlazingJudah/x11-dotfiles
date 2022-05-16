@@ -30,3 +30,13 @@ alias gP="git push"
 alias gp="git pull"
 alias gr="git reset"
 alias gs="git status"
+
+# Allows easy restarts with doas without compromising security by making
+# anything with the name reboot/poweroff root without password.
+if command -v doas >/dev/null 2>&1; then
+	alias reboot="doas /sbin/reboot"
+	alias poweroff="doas /sbin/poweroff"
+elif command -v sudo >/dev/null 2>&1; then
+	alias reboot="sudo /sbin/reboot"
+	alias poweroff="sudo /sbin/poweroff"
+fi

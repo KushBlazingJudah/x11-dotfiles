@@ -18,6 +18,13 @@ esac
 xrdb -merge < "$HOME/.Xresources"
 setbg ~/.config/wall
 
+if command -v ibus >/dev/null 2>&1; then
+	export GTK_IM_MODULE=ibus
+	export QT_IM_MODULE=ibus
+	export XMODIFIERS=@im=ibus
+	ibus-daemon -rxR &
+fi
+
 picom &
 xset r rate 300 50 &
 unclutter-xfixes &

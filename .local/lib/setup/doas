@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if [ "$(id -u)" -ne 0 ]; then
+	echo "Run as root."
+	exit 1
+fi
+
+cat > /etc/doas.d/setupdoas.conf <<EOF
+permit persist :wheel
+permit nopass :wheel as root cmd /sbin/reboot
+permit nopass :wheel as root cmd /sbin/poweroff
+EOF

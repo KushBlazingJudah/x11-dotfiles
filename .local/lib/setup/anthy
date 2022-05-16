@@ -1,0 +1,30 @@
+#!/bin/sh -e
+
+if [ -t 0 ]; then
+	echo "If you are running this in a graphical environment, programs may crash or otherwise behave weirdly."
+	echo "Do not run this if you have unsaved work, it will most likely be lost."
+	echo "You have 5 seconds to interrupt."
+	sleep 5
+fi
+
+dconf load / <<EOF
+[desktop/ibus/general]
+engines-order=['xkb:us::eng', 'anthy']
+preload-engines=['xkb:us::eng', 'anthy']
+use-system-keyboard-layout=true
+
+[desktop/ibus/general/hotkey]
+triggers=['<Control>space']
+
+[desktop/ibus/panel]
+show=0
+
+[org/freedesktop/ibus/engine/anthy/common]
+conversion-segment-mode=0
+input-mode=0
+shortcut-type='atok'
+typing-method=0
+EOF
+
+# This breaks everything
+ibus restart
