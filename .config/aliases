@@ -20,3 +20,13 @@ case "$EDITOR" in
 		alias vi="nvim"
 		;;
 esac
+
+# git aliases
+alias gA="git commit --amend"
+alias ga="git add"
+alias gC="git checkout"
+alias gc="git commit"
+alias gP="git push"
+alias gp="git pull"
+alias gr="git reset"
+alias gs="git status"

@@ -13,3 +13,8 @@ monitors() {
 monioff() {
 	xrandr --output "$1" --off
 }
+
+# Set the background image to $1.
+setbg() {
+	hsetroot -fill "$1"
+}

@@ -16,6 +16,7 @@ case "$(hostname)" in
 esac
 
 xrdb -merge < "$HOME/.Xresources"
+setbg ~/.config/wall
 
 picom &
 xset r rate 300 50 &
