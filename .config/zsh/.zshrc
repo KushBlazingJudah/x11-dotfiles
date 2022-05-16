@@ -1,9 +1,18 @@
 # Use machine name in PS1 if over SSH
 if [ -n "$SSH_CONNECTION" ]; then
-	export PS1="%m%# "
+	export PS1="%m%(?..!%?)%(1j.&%j.)%# "
 else
-	export PS1="%# "
+	export PS1="%(?..!%?)%(1j.&%j.)%# "
 fi
+
+# Explaination of PS1 since I don't understand it myself:
+# %m: hostname
+# %(?..!%?): display !exit_code if exit code is nonzero
+# %(1j.&%j.): display &jobs if there are any jobs
+# %#: % or # based on user
+#
+# The exclusion of a RPS1 was done on purpose, to make copypasting things
+# easier.
 
 # Move history file and make it smaller
 export HISTFILE=~/.cache/zsh-histfile

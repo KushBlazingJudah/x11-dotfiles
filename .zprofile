@@ -67,14 +67,6 @@ case "$(hostname)" in
 		;;
 esac
 
-# IME
-if command -v fcitx5 >/dev/null 2>&1; then
-	export GTK_IM_MODULE=fcitx
-	export QT_IM_MODULE=fcitx
-	export XMODIFIERS=@im=fcitx
-	export SDL_IM_MODULE=fcitx
-fi
-
 # ~/.local/bin in PATH
 export PATH="$HOME/.local/bin:$PATH"
 
