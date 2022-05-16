@@ -1,10 +1,29 @@
 # vim: set ft=sh:
 
-if [ -z "$_sdcv" ]; then
-	_sdcv="$(command -v sdcv)"
-fi
+# Looks a word up in the dictionary.
+define() {
+	sdcv -n --utf8-output --color "$@"
+}
 
-sdcv() {
-	$_sdcv -n --utf8-output --color "$@" 2>&1 | \
-	fold -w $(tput cols)
+# Spell a word. No output if fine, will print suggestions if spelt wrong or the
+# stem of the word. (the "join" of "joining")
+# Parses hunspell's output to make it prettier.
+spell() {
+	printf '%s' "$1" | hunspell | while read -r line; do
+		case "$line" in
+			\&*)
+				echo "suggestions: ${line#*: }"
+				return 1
+				;;
+			\#*)
+				echo "no suggestions"
+				return 1
+				;;
+			+*)
+				echo "stem: ${line#* }"
+				;;
+		esac
+
+		# Everything else we don't care about and don't print.
+	done
 }
