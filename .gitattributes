@@ -1,0 +1,2 @@
+.local/share/wsj/theme/*/*.css -linguist-detectable
+.local/share/wsj/theme/*/*/*.css -linguist-detectable
