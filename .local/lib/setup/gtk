@@ -1,0 +1,33 @@
+#!/bin/sh -e
+
+# Creates a GTK theme from internally stored files and Xresources.
+
+if [ ! -e "$HOME/.themes" ]; then
+	mkdir -p ~/.themes
+fi
+
+cp -r ~/.local/share/wsj/theme ~/.themes/wsjgtk
+
+color() {
+	xrdb -get "gtk.$1"
+}
+
+sed -i -e "
+      s|{color0}|$(color background)|g
+      s|{active}|$(color background)|g
+      s|{color15}|$(color foreground)|g
+      s|{color1}|$(color color1)|g
+      s|{color2}|$(color color2)|g
+      s|{color3}|$(color color3)|g
+      s|{color4}|$(color color4)|g
+      s|{color5}|$(color color5)|g
+      s|{color6}|$(color color6)|g
+      s|{color7}|$(color color7)|g
+      s|{color8}|$(color color8)|g
+      s|{color9}|$(color color9)|g
+      s|{color10}|$(color color10)|g
+      s|{color11}|$(color color11)|g
+      s|{color12}|$(color color12)|g
+      s|{color13}|$(color color13)|g
+      s|{color14}|$(color color14)|g
+" ~/.themes/wsjgtk/gtk-2.0/gtkrc ~/.themes/wsjgtk/gtk-3.0/gtk.css ~/.themes/wsjgtk/gtk-3.20/gtk.css

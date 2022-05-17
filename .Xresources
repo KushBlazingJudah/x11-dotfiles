@@ -24,8 +24,8 @@ dmenu.font: monospace:size=12
 *.color14: #8ec07c
 *.color15: #ebdbb2
 
-st.background: bg
-st.foreground: fg
+*.background: bg
+*.foreground: fg
 
 dwm.normbgcolor: bg
 dwm.normbordercolor: bg
