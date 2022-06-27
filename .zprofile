@@ -25,6 +25,7 @@ export GTK2_RC_FILES="$XDG_CONFIG_HOME}/gtk-2.0/gtkrc-2.0"
 export MBSYNCRC="${XDG_CONFIG_HOME:-$HOME/.config}/mbsync"
 export WEECHAT_HOME="${XDG_CONFIG_HOME}/weechat"
 export ZDOTDIR="${XDG_CONFIG_HOME}/zsh"
+export PASSWORD_STORE_DIR="${XDG_DATA_HOME}/password-store"
 
 # Add GOPATH bin into path if it exists
 if [ -d "$GOPATH/bin" ]; then
@@ -58,14 +59,6 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 if [ "$TERM" = "foot" ]; then
 	export TERM="xterm-256color"
 fi
-
-# Change DPI based on hostname
-case "$(hostname)" in
-	koneko)
-		export GDK_DPI_SCALE=1.25
-		export QT_SCALE_FACTOR=1.25
-		;;
-esac
 
 # ~/.local/bin in PATH
 export PATH="$HOME/.local/bin:$PATH"

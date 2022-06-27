@@ -2,10 +2,11 @@
 #define fg #ebdbb2
 #define sel #cc241d
 
-*.font: monospace:size=14
+*.font: monospace:size=10
 
-dwm.font: monospace:size=12
-dmenu.font: monospace:size=12
+dwm.font: monospace:size=10
+dmenu.font: monospace:size=10
+st.font: monospace:size=12
 
 *.color0: #282828
 *.color1: #cc241d

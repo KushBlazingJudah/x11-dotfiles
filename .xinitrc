@@ -4,6 +4,10 @@
 
 case "$(hostname)" in
 	gijyutsu)
+		#export GDK_DPI_SCALE=1.25
+		#export QT_SCALE_FACTOR=1.25
+		setdpi 96
+
 		monitors | while read -r monitor; do
 			# Used in clamshell exclusively.
 			if [ "$monitor" = "HDMI1" ]; then
@@ -12,6 +16,11 @@ case "$(hostname)" in
 			fi
 		done
 		unset monitor
+		;;
+	koneko)
+		#export GDK_DPI_SCALE=1.25
+		#export QT_SCALE_FACTOR=1.25
+		setdpi 96
 		;;
 esac
 

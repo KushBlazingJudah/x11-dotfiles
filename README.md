@@ -14,14 +14,15 @@ Importantly, you'll want these custom builds of suckless tools:
 
 - [dmenu](https://github.com/KushBlazingJudah/dmenu)
 - [dwm](https://github.com/KushBlazingJudah/dwm)
-- [dwmblock](https://github.com/KushBlazingJudah/dwmblock)
+- [slock](https://github.com/KushBlazingJudah/slock)
 - [st](https://github.com/KushBlazingJudah/st)
+- [sta](https://github.com/KushBlazingJudah/sta)
+
+*All are packaged in
+[my Alpine repo](https://github.com/KushBlazingJudah/alpine-repo)*
 
 These four tools lay the foundation for my setup and countless others.
 My builds are patched somewhat heavily, but nothing terrible.
-`st` has the most patches, currently at 13.
-`dwmblock` is `dwmblocks` but stripped down to the bare minimum.
-It now just displays the time, as anything more than that is distracting.
 
 Once everything is in place, run the files in `.local/lib/setup` where
 appropriate to complete your configuration.

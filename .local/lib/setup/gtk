@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/sh -ex
 
 # Creates a GTK theme from internally stored files and Xresources.
 
@@ -6,7 +6,7 @@ if [ ! -e "$HOME/.themes" ]; then
 	mkdir -p ~/.themes
 fi
 
-cp -r ~/.local/share/wsj/theme ~/.themes/wsjgtk
+cp -rf ~/.local/share/wsj/theme ~/.themes/wsjgtk
 
 color() {
 	xrdb -get "gtk.$1"
