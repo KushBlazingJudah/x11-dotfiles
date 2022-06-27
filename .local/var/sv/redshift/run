@@ -1,0 +1,4 @@
+#!/bin/sh
+read -r lat lon < ~/.local/private/location
+echo "$lat:$lon"
+exec redshift -l "$lat:$lon"
