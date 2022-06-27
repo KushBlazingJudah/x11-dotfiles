@@ -1,0 +1,210 @@
+#!/bin/sh -e
+# vim: set tw=80 ft=sh:
+
+# WSJ's Song Syncing Tool
+# (c) 2022 WeedSmokingJew
+#
+# This is a direct rewrite of my previously unreleased sst, as that was written
+# in 2020 and showing it's age heavily.
+# But the idea is that you tell it to link some files and it'll do that. The
+# syncing part is done by Syncthing or whatever you decide to use.
+#
+# Note: this assumes none of your file have tabs in them.
+
+MUS="$HOME/mus"
+MUSSYNC="$HOME/mus-sync"
+
+# Does a fast checksum on its arguments.
+asum() {
+	printf '%s' $* | cksum | while read -r sum _; do
+		printf '%x' "$sum"
+	done
+}
+
+# Transforms a database album artist/album pair into a safe file path.
+# Arguments: Album artist, album (opt).
+transform() {
+	case "$#" in
+		0)	die "invalid call to transform"
+			;;
+		1)	printf '%s/db/%s' "$MUSSYNC" "$1"
+			;;
+		*)	printf '%s/db/%s/%s' "$MUSSYNC" "$1" "$2"
+			;;
+	esac
+}
+
+# Hard links dst to src.
+# Can be symbolic links if your syncing tool supports it. Syncthing doesn't.
+# Args: dst, src.
+link() {
+	[ ! -e "$MUSSYNC/db" ] && mkdir -p "$MUSSYNC/db"
+
+	ln "$2" "$MUSSYNC/$1"
+}
+
+# Exits with an error message.
+die() {
+	printf 'die: %s' "$*"
+	exit 1
+}
+
+# Returns the file extension of the argument.
+# Args: file name with extension
+ext() {
+	printf '%s' "${1##*.}"
+}
+
+# Cleans up a database entry.
+# Args: album artist, album
+cleanup() {
+	p="$(transform "$1" "$2")"
+	wc -l < "$p"
+	if [ "$(wc -l < "$p")" = 0 ]; then
+		rm -v "$p"
+	fi
+
+	rmdir "$(dirname "$p")" 2>/dev/null || true
+}
+
+# Checks if a song is in the database.
+# Arguments: Album artist, album, file name.
+# Returns 1 if not, returns the hash if it is.
+is_in_db() {
+	if [ ! -e "$(transform "$1" "$2")" ]; then
+		return 1
+	fi
+
+	# Read each line in the file, and exit if we match.
+	while IFS="	" read -r fn sum; do
+		if [ "$fn" = "$3" ]; then
+			printf '%s' "$sum"
+			return 0
+		fi
+	done < "$(transform "$1" "$2")"
+	return 1
+}
+
+# Adds a song to the database.
+# Arguments: Album artist, album, file name, source file.
+# Hard links files to $MUSSYNC.
+add_to_db() {
+	[ ! -e "$MUSSYNC/db" ] && mkdir -p "$MUSSYNC/db"
+
+	# Check if it already exists, and exit if it does.
+	# Since we output the sum when we put it in, no redirection to /dev/null
+	# is done.
+	if is_in_db "$1" "$2" "$3"; then
+		return 0
+	fi
+
+	# It's not, create a hash and toss it in.
+	h="$(asum "$1" "$2" "$3")"
+	p="$(transform "$1" "$2")"
+	mkdir -p "$(dirname "$p")"
+	echo "$3	$h" >> "$p"
+
+	printf '%s' "$h"
+	link "$h.$(ext "$3")" "$4"
+}
+
+# Removes a song from the database, and cleans up.
+# Arguments: Album artist, album, file name.
+rm_from_db() {
+	if ! is_in_db "$1" "$2" "$3"; then
+		return 0
+	fi
+
+	# Find line that we're on.
+	h="$(asum "$1" "$2" "$3")"
+	p="$(transform "$1" "$2")"
+	l="$(cut -d'	' -f2 < "$p" | grep -Fnm 1 "$h" || die "not in db: $1/$2/$3")"
+
+	# Delete.
+	sed -i "${l%%:*}d" "$p"
+
+	# Clean.
+	unlink "$MUSSYNC/$h.$(ext "$3")"
+	cleanup "$1" "$2"
+}
+
+usage() {
+	echo "sst - song syncing tool
+commands:
+- link		links by artist, artist + album (also l)
+- unlink	inverse of link (also ul)
+- beetlink	uses beet queries to link (also bl)
+- beetunlink	inverse of beetlink (also bul)" >&2
+	exit 1
+}
+
+if [ "$#" -lt 1 ]; then
+	usage
+fi
+
+cmd="$1"
+shift 1
+
+case "$cmd" in
+	link|l)
+		case "$#" in
+			1)	find "$MUS/$1" -type f -name "*.flac" -o -name "*.mp3" | while read -r line; do
+					a="${line##$MUS/$1/}"
+
+					# f will be equal to a if this is outside of an album
+					f="$(basename "$a")"
+					if [ "$f" = "$a" ]; then
+						add_to_db "$1" "no-album" "$a" "$line" >/dev/null
+					else
+						add_to_db "$1" "$(dirname "$a")" "$f" "$line" >/dev/null
+					fi
+				done
+				;;
+			2)	find "$MUS/$1/$2" -type f -name "*.flac" -o -name "*.mp3" | while read -r line; do
+					case "$line" in
+						*.mp3|*.flac) ;;
+						*) printf "skipping %s\n" "$line" ;;
+					esac
+
+					f="${line##$MUS/$1/$f/}"
+					add_to_db "$1" "$a" "$2" "$line" >/dev/null
+				done
+				;;
+			*) usage ;;
+		esac
+		;;
+	beetlink|bl)
+		beet ls -f '$albumartist	$album	$path' -- "$*" | while IFS="	" read -r aa a p; do
+			t="$(basename "$p")"
+			add_to_db "$aa" "$a" "$t" "$p" >/dev/null
+		done
+		;;
+	unlink|ul)
+		case "$#" in
+			1)	find "$(transform "$1")" -type f | while read -r line; do
+					while IFS="	" read -r fn sum; do
+						unlink "$MUSSYNC/$sum.$(ext "$fn")" || true
+					done < "$line"
+					rm "$line"
+				done
+				cleanup "$1"
+				;;
+			2)	while read -r line; do
+					while IFS="	" read -r fn sum; do
+						unlink "$MUSSYNC/$sum.$(ext "$fn")" || true
+					done < "$line"
+					rm "$line"
+				done < "$(transform "$1" "$2")"
+				cleanup "$1" "$2"
+				;;
+			*) usage ;;
+		esac
+		;;
+	beetunlink|bul)
+		beet ls -f '$albumartist	$album	$path' -- "$*" | while IFS="	" read -r aa a p; do
+			t="$(basename "$p")"
+			rm_from_db "$aa" "$a" "$t" >/dev/null
+		done
+		;;
+	*) usage ;;
+esac

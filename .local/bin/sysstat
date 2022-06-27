@@ -1,0 +1,7 @@
+#!/bin/sh
+
+loadavg=$(cut -d' ' -f -3 < /proc/loadavg)
+battery="$(cat /sys/class/power_supply/BAT0/capacity)%"
+memory="$(awk '/MemAvailable/{free=$2} /MemTotal/{total=$2} END{printf "%.0fMB/%.0fMB (%0.1f%%)", ((total-free)/1024), (total/1024), 100-(free*100)/total}' /proc/meminfo)"
+
+notify-send -c sysstat "$(printf "%s\nbattery: %s\nload: %s\nmemory: %s" "$(date)" "$battery" "$loadavg" "$memory")"

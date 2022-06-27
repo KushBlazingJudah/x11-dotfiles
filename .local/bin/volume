@@ -1,0 +1,45 @@
+#!/bin/sh
+
+# Simple script that does media functions.
+
+# Hack, ported from Wayland
+if [ -z "$WOBSOCK" ]; then
+	WOBSOCK=/dev/null
+fi
+
+volup() {
+	if [ "$1" = "1" ]; then
+		amixer sset Master 1%+ | sed -En 's/.*\[([0-9]+)%\].*/\1/p' | head -1 > $WOBSOCK
+	else
+		amixer sset Master 5%+ | sed -En 's/.*\[([0-9]+)%\].*/\1/p' | head -1 > $WOBSOCK
+	fi
+}
+
+voldown() {
+	if [ "$1" = "1" ]; then
+		amixer sset Master 1%- | sed -En 's/.*\[([0-9]+)%\].*/\1/p' | head -1 > $WOBSOCK
+	else
+		amixer sset Master 5%- | sed -En 's/.*\[([0-9]+)%\].*/\1/p' | head -1 > $WOBSOCK
+	fi
+}
+
+volmute() {
+	amixer sset Master toggle | sed -En '/\[on\]/ s/.*\[([0-9]+)%\].*/\1/ p; /\[off\]/ s/.*/0/p' | head -1 > $WOBSOCK
+}
+
+cmd="$1"
+shift 1
+case "$cmd" in
+	up)
+		volup "$@"
+		;;
+	down)
+		voldown "$@"
+		;;
+	mute)
+		volmute "$@"
+		;;
+	*)
+		exit 1
+		;;
+esac
