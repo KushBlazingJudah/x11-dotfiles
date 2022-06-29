@@ -38,4 +38,8 @@ fi
 
 xset r rate 300 50 &
 
-exec dwm
+# I'd like to exec this but I need to cleanup runit before we leave.
+gpg-agent --daemon -- dwm
+
+usv force-stop ~/.local/var/sv/*
+usv exit ~/.local/var/sv/*
