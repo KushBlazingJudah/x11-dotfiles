@@ -1,0 +1,249 @@
+#!/bin/sh -e
+
+# Simple video condenser from subtitles, like immersionpod but in POSIX sh and
+# less shit (but probably still quite shit)
+# Needs ffmpeg.
+
+# CONFIGURATION
+langs="jpn"
+sublangs="eng"
+bitrate="64k"
+outdir="$HOME/mus/immersionpod"
+ndays=7
+# deleteold=1 # TODO
+# END CONFIGURATION
+
+cleanup=""
+
+# Silently removes all files marked for cleanup.
+_cleanup() {
+	for i in $cleanup; do
+		rm -- "$i" || true
+	done
+}
+
+trap "_cleanup" EXIT INT
+
+die() {
+	printf 'die: %s\n' "$@" >&2
+	exit 1
+}
+
+# Chooses best track from input according to langs in $*.
+# $*: list of languages
+# output: "id,lang" where lang is an ISO 639 abbreviation
+# return code: 0 if successful, 1 if not (for informative error messages)
+best_track() {
+	_langs="$*" # hack.
+	while IFS=, read -r id lang; do
+		# Loop over the array variable.
+		while [ "$#" -gt 0 ]; do
+			if [ "$lang" = "$1" ]; then
+				# We found a suitable match.
+				echo "$id,$lang"
+				return
+			fi
+			shift
+		done
+
+		# If we made it here, there are no languages that fit this track.
+		# Repopulate $* and move on.
+		# shellcheck disable=SC2086
+		set -- $_langs
+	done
+
+	# Nothing suitable.
+	return 1
+}
+
+# tracks gives you the audio tracks matched up with their language.
+# $1: type of track (subtitles, audio)
+# $2: file name
+# output: "id,lang" where lang is an ISO 639 abbreviation
+# dies on fail
+tracks() {
+	if [ "$#" -lt 0 ]; then
+		die "tracks: need type of track and a file name"
+	fi
+
+	arg=""
+	case "$1" in
+		subtitles) arg="s" ;;
+		audio)	arg="a" ;;
+		*)	die "tracks: only support subtitles and audio" ;;
+	esac
+	shift
+	ffprobe -loglevel error -select_streams "$arg" -show_entries stream=index:stream_tags=language -of csv=p=0 -- "$1" || die "tracks subtitles: failed extracting"
+}
+
+# Extracts a track from a file into stdout.
+# Doesn't support video.
+# $1: file name
+# $2: track id
+# $3: out codec
+# dies on failure
+extract() {
+	args=""
+	case "$3" in
+		srt) args="-an -f srt" ;;
+		*) args="-sn -f opus -c:a libopus -b:a $bitrate" ;;
+	esac
+
+	# shellcheck disable=SC2086
+	ffmpeg  -i "$1" \
+		-nostdin \
+		-loglevel error \
+		-hide_banner \
+		-map_metadata -1 \
+		-vn \
+		-map 0:$2 \
+		$args \
+		pipe:1 || die "extract $3 failed"
+}
+
+# Chunks up subtitles into times.
+# Input: srt subtitle.
+# Output: start sec, end sec.
+chunk_up() {
+	awk -F' --> ' '
+BEGIN {
+	prev["start"] = 0.0
+	prev["end"] = 0.0
+	pad = 0.2
+}
+
+function tosecs(timecode,	a)
+{
+	split(timecode, a, ":")
+	gsub(",", ".", a[3])
+	return (a[1]*3600) + (a[2]*60) + a[3]
+}
+
+function max(a, b)
+{
+	if (a > b) {
+		return a
+	}
+	return b
+}
+
+$0 ~ "^[0-9]{2}:[0-9]{2}:[0-9]{2},[0-9]{3} --> [0-9]{2}:[0-9]{2}:[0-9]{2},[0-9]{3}$" {
+	cur["start"] = tosecs($1)
+	cur["end"] = tosecs($2)
+
+	if ( cur["start"] == cur["end"] ) { next }
+
+	cur["start"] = max(0, cur["start"] - pad)
+	cur["end"] = max(0, cur["end"] + pad)
+
+	if ( prev["end"] == 0 ) {
+		prev["start"] = cur["start"]
+		prev["end"] = cur["end"]
+		next
+	}
+
+	changed = 0
+	if ( cur["start"] < prev["end"] ) {
+		prev["end"] = cur["end"]
+		changed = 1
+	}
+	if ( cur["start"] < prev["start"] ) {
+		prev["start"] = cur["start"]
+		changed = 1
+	}
+	if (changed) {
+		next
+	}
+
+	print prev["start"] "," prev["end"]
+	prev["start"] = cur["start"]
+	prev["end"] = cur["end"]
+}
+
+END {
+	print prev["start"] "," prev["end"]
+}
+'
+}
+
+make_output() {
+	concattmp="$(mktemp)"
+	cleanup="$cleanup $concattmp"
+	{
+		echo "ffconcat version 1.0"
+		while IFS=, read -r start end; do
+		cat <<EOF
+file '$1'
+inpoint $start
+outpoint $end
+
+EOF
+		done
+	} > "$concattmp"
+
+	# HORRIBLE HACK I'M SO SORRY
+	# But it fixes timecodes!
+	ffmpeg -hide_banner -loglevel error -y -f concat -safe 0 -i "$concattmp" -f opus -c:a libopus -b:a "$bitrate" pipe:1 \
+		| ffmpeg -hide_banner -loglevel error -i pipe:0 -f opus -c:a libopus -b:a "$bitrate" pipe:1
+}
+
+#
+# Main code
+#
+
+_add() {
+	while [ "$#" -gt 0 ]; do
+		[ ! -e "$1" ] && die "$1: file does not exist"
+		[ ! -r "$1" ] && die "$1: file is not readable"
+
+		subtr="$(tracks subtitles "$1" | best_track $sublangs || die "no good subtitle track found")"
+		audtr="$(tracks audio "$1" | best_track $langs || die "no good audio track found")"
+
+		# Extract track.
+		subtmp="$(mktemp)"
+		audtmp="$(mktemp)"
+		cleanup="$cleanup $subtmp $audtmp"
+		extract "$1" "${subtr%,*}" "srt" > "$subtmp"
+		extract "$1" "${audtr%,*}" "libopus" > "$audtmp"
+
+		chunk_up < "$subtmp" | make_output "$audtmp" "libopus" > "$outdir/$(date +%s).opus"
+
+		shift
+	done
+}
+
+_archive() {
+	now="$(date +%s)"
+	tooold="$((now - (24*60*60)*ndays))"
+	for i in "$outdir"/*.opus; do
+		# File name format is <timestamp>.opus
+		# We keep at most $ndays
+		fname="${i#"$outdir"}"
+		fname="${fname#/}" # may exist
+		fname="${fname%.opus}"
+		if [ "$fname" -lt "$tooold" ]; then
+			rm -v -- "$i"
+		fi
+	done
+}
+
+usage() {
+	cat >&2 <<EOF
+usage:
+$0 add [file...]
+	condense a file
+$0 archive
+	remove old files
+EOF
+	exit 1
+}
+
+case "$1" in
+	add|archive)	;;
+	"")	usage ;;
+	*)	printf 'invalid action\n' >&2; usage ;;
+esac
+cmd="$1"
+shift
+
+_"$cmd" "$@"

@@ -1,0 +1,4 @@
+#!/bin/sh
+# Wrapper around sv so it can be called from scripts or programs
+export SVDIR="$HOME/.local/var/sv"
+exec sv "$@"
