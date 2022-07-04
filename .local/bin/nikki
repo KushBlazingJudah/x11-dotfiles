@@ -1,0 +1,30 @@
+#!/bin/sh -ex
+
+# shitty diary script
+# all it does is automates the creation and encryption of files.
+# enjoy.
+
+: ${DIARY:="$HOME/doc/diary"}
+AUTHOR="$(whoami) <$(whoami)@$(hostname)>"
+
+if [ ! -e "$DIARY" ]; then
+	mkdir -v -- "$DIARY"
+fi
+
+DATE="$(date +%s)"
+FILE="$DATE.md"
+touch -- "$DIARY/$FILE"
+"$EDITOR" -- "$DIARY/$FILE"
+if ! gpg --encrypt "$DIARY/$FILE"; then
+	printf 'gpg failed; unencrypted at %s\n' "$DIARY/$FILE"
+	exit 1
+fi
+
+if [ -e "$DIARY/$FILE.gpg" ]; then
+	rm -- "$DIARY/$FILE"
+else
+	printf 'gpg output file not detected; entry kept unencrypted at %s\n' "$DIARY/$FILE"
+fi
+
+git -C "$DIARY" add -- "$DIARY/$FILE.gpg"
+git -C "$DIARY" commit --author="$AUTHOR" -m "new entry: $DATE"
