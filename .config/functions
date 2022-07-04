@@ -27,3 +27,10 @@ spell() {
 		# Everything else we don't care about and don't print.
 	done
 }
+
+# Fetches the weather.
+wttr() {
+	IFS="	" read -r _ _ loc < "$HOME/.local/private/location"
+	curl "https://wttr.in/$loc?0F"
+	unset loc
+}

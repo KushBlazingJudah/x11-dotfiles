@@ -1,14 +1,17 @@
 # vim: set ft=sh:
 
 alias ls="ls --color=auto"
-alias la="ls -la"
+alias la="ls -a"
+alias ll="ls -l"
+alias lla="ls -la"
 
 alias mv="mv -i"
 alias rm="rm -i"
 
-alias ip="ip --color=auto"
-
-alias dg="git --git-dir=\"$HOME/.dotfiles\" --work-tree=\"$HOME\""
+if [ "$(readlink "$(command -v ip)")" != "/bin/busybox" ]; then
+	# Busybox ip doesn't support this option
+	alias ip="ip --color=auto"
+fi
 
 case "$EDITOR" in
 	nvim)
@@ -18,14 +21,18 @@ case "$EDITOR" in
 esac
 
 # git aliases
-alias gA="git commit --amend"
-alias ga="git add"
-alias gC="git checkout"
-alias gc="git commit"
-alias gP="git push"
-alias gp="git pull"
-alias gr="git reset"
-alias gs="git status"
+alias d="git --git-dir=\"$HOME/.dotfiles\" --work-tree=\"$HOME\""
+alias g="git"
+for i in g d; do
+	alias "$i"A="$i commit --amend"
+	alias "$i"a="$i add"
+	alias "$i"C="$i checkout"
+	alias "$i"c="$i commit"
+	alias "$i"P="$i push"
+	alias "$i"p="$i pull"
+	alias "$i"r="$i reset"
+	alias "$i"s="$i status"
+done
 
 # Allows easy restarts with doas without compromising security by making
 # anything with the name reboot/poweroff root without password.

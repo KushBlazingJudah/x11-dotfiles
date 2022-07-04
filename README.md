@@ -31,7 +31,7 @@ appropriate to complete your configuration.
 
 Revisit this list every once in a while.
 
-- Write a detailed description of the packages used here to make it easy to
-  bootstrap a system.
-  - Package a couple things because there are several things in here that are
-    not packaged, namely suckless tools.
+## Setup
+
+- `~/.local/private/location`: Latitude, longitude, and friendly name for a
+  location. Tab separated, all on one line. Used for redshift and wttr.
