@@ -26,7 +26,7 @@ run() {
 	esac
 
 	if [ -e "$PLUMBDIR/$mime" ]; then
-		setsid -f "$PLUMBDIR/$mime" "$1"
+		setsid "$PLUMBDIR/$mime" "$1"
 	else
 		exit 1
 	fi

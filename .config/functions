@@ -34,3 +34,12 @@ wttr() {
 	curl "https://wttr.in/$loc?0F"
 	unset loc
 }
+
+catbox() {
+	if [ ! -e "$1" ]; then
+		printf 'File does not exist.\n' >&2
+		return 1
+	fi
+
+	curl -F "reqtype=fileupload" -F "fileToUpload=@$1" https://catbox.moe/user/api.php
+}
