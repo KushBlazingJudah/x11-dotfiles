@@ -1,4 +1,4 @@
-#!/bin/sh -ex
+#!/bin/sh -e
 
 # Creates a GTK theme from internally stored files and Xresources.
 
@@ -7,14 +7,18 @@ if [ ! -e "$HOME/.themes" ]; then
 fi
 
 cp -rf ~/.local/share/wsj/theme ~/.themes/wsjgtk
+mkdir ~/.config/dunst || true
+cp -f ~/.local/share/wsj/dunstrc ~/.config/dunst/dunstrc
 
 color() {
 	xrdb -get "gtk.$1"
 }
 
 sed -i -e "
+      s|{background}|$(color background)|g
+      s|{foreground}|$(color foreground)|g
       s|{color0}|$(color background)|g
-      s|{active}|$(color background)|g
+      s|{active}|$(color foreground)|g
       s|{color15}|$(color foreground)|g
       s|{color1}|$(color color1)|g
       s|{color2}|$(color color2)|g
@@ -30,4 +34,8 @@ sed -i -e "
       s|{color12}|$(color color12)|g
       s|{color13}|$(color color13)|g
       s|{color14}|$(color color14)|g
-" ~/.themes/wsjgtk/gtk-2.0/gtkrc ~/.themes/wsjgtk/gtk-3.0/gtk.css ~/.themes/wsjgtk/gtk-3.20/gtk.css
+" ~/.themes/wsjgtk/gtk-2.0/gtkrc ~/.themes/wsjgtk/gtk-3.0/gtk.css ~/.themes/wsjgtk/gtk-3.20/gtk.css ~/.config/dunst/dunstrc
+
+gsettings set org.gnome.desktop.interface gtk-theme ""
+gsettings set org.gnome.desktop.interface gtk-theme "wsjgtk"
+usv restart dunst
