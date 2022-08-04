@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Common functions.
+
+die() {
+	printf '\033[91;1merror\033[0m: %s\n' "$*"
+	exit 1
+}

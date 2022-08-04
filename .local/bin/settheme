@@ -1,0 +1,27 @@
+#!/bin/sh -e
+
+# Sets the theme and runs appropriate scripts.
+# Arguments: <theme name>
+
+. $HOME/.local/lib/common
+. $HOME/.local/lib/x
+
+if [ -z "$1" ]; then
+	die "needs theme name"
+fi
+
+if [ ! -d "$WSJ_CONF_DIR" ]; then
+	mkdir "$WSJ_CONF_DIR" || die "failed to create configuration directory"
+fi
+
+if [ ! -e "$WSJ_DATA_DIR/$1.Xresources" ]; then
+	die "theme not found"
+fi
+
+echo "$1" > "$WSJ_CONF_DIR/theme"
+
+setupxrdb
+mkbg "$(getxrdb dwm.background)"
+~/.local/lib/setup/gtk
+pidof st | xargs kill -s USR1
+xsetroot -name "xrdb"

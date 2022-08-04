@@ -24,7 +24,7 @@ case "$(hostname)" in
 		;;
 esac
 
-xrdb -merge < "$HOME/.Xresources"
+setupxrdb
 
 runsvdir ~/.local/var/sv &
 
