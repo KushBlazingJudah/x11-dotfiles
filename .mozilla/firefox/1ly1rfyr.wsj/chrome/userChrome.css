@@ -1,3 +1,15 @@
+:root {
+  --wsj-tab-bg: #282828;
+  --wsj-tab-active-bg: #ebdbb2;
+  --wsj-tab-fg: #ebdbb2;
+  --wsj-tab-active-fg: #282828;
+
+  --tab-min-height: 22px !important;
+  --wsj-tab-font-size: 0.9em;
+}
+
+#nav-bar { background: var(--wsj-tab-bg) !important; }
+
 /* Source file https://github.com/MrOtherGuy/firefox-csshacks/tree/master/chrome/hide_tabs_with_one_tab.css made available under Mozilla Public License v. 2.0
 See the above repository for updates as well as full license text. */
 
@@ -66,7 +78,7 @@ See the above repository for updates as well as full license text. */
   }
   #TabsToolbar > .titlebar-buttonbox-container > .titlebar-buttonbox > .titlebar-button{
     transform: scale(0.8);
-    margin-inline: -3px !important;
+    margin-inline: -3x !important;
   }
   #TabsToolbar .titlebar-button > .toolbarbutton-icon{ padding: 0 13px !important }
 }
@@ -80,24 +92,20 @@ See the above repository for updates as well as full license text. */
 
 :root[id]{
   --tab-block-margin: 0px !important;
-  --tabs-shadow-size: 1px !important;
+  --tabs-shadow-size: 0px !important;
 
   /* Remove next line if you want selected tab to have color other than toolbar background - then it follows your theme color  */
   --lwt-selected-tab-background-color: var(--toolbar-bgcolor) !important;
 }
 
 /* Uncomment next line to force specific color for tab top line */
-/* #tabbrowser-tabs{ --lwt-tab-line-color: blue !important; } */
+#tabbrowser-tabs{ --lwt-tab-line-color: var(--toolbar-bgcolor) !important; }
 
 /* These next two rules set a color for border around tabs and between tabs & navigation toolbars. Set to transparent to remove the border.*/
 #nav-bar{
   /* This overrides value in compact_proton.css */
-  box-shadow: 0 -1px 0 0 color-mix(in srgb, currentcolor 30%, transparent) !important;
+  box-shadow: 0 0px 0 0 color-mix(in srgb, currentcolor 30%, transparent) !important;
 }
-/* .tab-background[selected]{
-  border-inline: 1px solid color-mix(in srgb, currentcolor 30%, transparent) !important;
-  border-bottom-color: transparent !important;
-} */
 
 #TabsToolbar{
   --toolbarbutton-inner-padding: 7px !important;
@@ -150,25 +158,6 @@ See the above repository for updates as well as full license text. */
   margin-inline-start: -1px;
 }
 
-/* Line to mark selected tab */
-.tab-background[selected]::before,
-.tabbrowser-tab:hover > stack > .tab-background::before{
-  display: -moz-box;
-  height: 2px;
-  content: "";
-}
-.tab-stack:hover > .tab-background::before{
-  background-color: inherit;
-}
-.tab-stack > .tab-background[selected]::before{
-  background-color: highlight;
-  background-image: linear-gradient(var(--lwt-tab-line-color),var(--lwt-tab-line-color));
-}
-/* Photon-like tab on hover animation for the top line */
-@keyframes tab-onhover-line-anim{ from{ margin-inline: 20px } to { margin-inline: 0 } }
-
-.tab-stack:hover > .tab-background::before{ animation: tab-onhover-line-anim 160ms }
-
 /* Disable animation for selected and pinned tabs */
 .tabbrowser-tab:is([pinned],[selected]) > .tab-stack > .tab-background::before{ animation: none }
 
@@ -192,7 +181,7 @@ See the above repository for updates as well as full license text. */
 /* This style hides the main toolbar and shows it when the cursor is over the tabs toolbar as well as whenever the focus is inside nav-bar, such as when urlbar is focused. */
 
 :root{ --uc-navbar-transform: -40px }
-:root[uidensity="compact"]{ --uc-navbar-transform: -34px }
+:root[uidensity="compact"]{ --uc-navbar-transform: -35px }
 
 #navigator-toolbox > div{ display: contents; }
 :root[sessionrestored] :where(#nav-bar,#PersonalToolbar,#tab-notification-deck,.global-notificationbox){
@@ -236,3 +225,10 @@ See the above repository for updates as well as full license text. */
 /* Move up the content view */
 :root[sessionrestored]:not([inFullscreen]) > body > #browser{ margin-top: var(--uc-navbar-transform); }
 
+#TabsToolbar, #tabbrowser-tabs { background: var(--wsj-tab-bg) !important; }
+.tab-background[selected] { background: var(--wsj-tab-active-bg) !important; }
+.tab-content { font-size: var(--wsj-tab-font-size) !important; }
+.tab-content[selected] { color: var(--wsj-tab-active-fg) !important; }
+.tabbrowser-tab{ background: var(--wsj-tab-bg) !important; --lwt-tab-line-color: var(--wsj-tab-bg) !important; }
+.tabbrowser-tab[selected]{ --lwt-tab-line-color: var(--wsj-tab-active-bg) !important; }
+.tab-icon-stack, .tab-close-button, #tabs-newtab-button { display: none; }
