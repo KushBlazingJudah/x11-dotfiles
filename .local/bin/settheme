@@ -21,7 +21,10 @@ fi
 echo "$1" > "$WSJ_CONF_DIR/theme"
 
 setupxrdb
+
 mkbg "$(getxrdb dwm.background)"
+setbg ~/.config/wall
+
 ~/.local/lib/setup/gtk
 pidof st | xargs kill -s USR1
 xsetroot -name "xrdb"

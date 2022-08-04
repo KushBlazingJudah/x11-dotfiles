@@ -1,0 +1,39 @@
+#!/bin/sh -e
+
+b() {
+	while [ "$#" -gt 0 ]; do
+		printf '\033[%dm  ' "$1"
+		shift
+	done
+	printf '\033[0m'
+}
+
+c() {
+	printf '\033[%sm%s\033[0m' "$1" "$2"
+}
+
+pkgs() {
+	if command -v apk >/dev/null; then
+		apk info | wc -l
+	else
+		printf 'unknown'
+	fi
+}
+
+wm() {
+	ps -e | grep -m 1 -o -F \
+		-e dwm
+}
+
+tf() {
+	fc-match monospace -f "%{family}"
+}
+
+cat <<EOF
+
+  $(b $(seq  40  43)) $(c 37 "$(whoami)")@$(c 37 "$(hostname)")
+  $(b $(seq  44  47)) $(c 1 "pkgs")	$(pkgs)
+  $(b $(seq 100 103)) $(c 1 "wm")	$(wm)
+  $(b $(seq 104 107)) $(c 1 "font")	$(tf)
+
+EOF

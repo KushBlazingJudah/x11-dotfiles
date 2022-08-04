@@ -19,7 +19,8 @@
 *.color14: #8ec07c
 *.color15: #ebdbb2
 
-*.background: #1d2021
+dwm.background: #1d2021
+*.background: bg
 *.foreground: fg
 
 *.normbgcolor: bg
