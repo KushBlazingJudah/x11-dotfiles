@@ -1,0 +1,32 @@
+#!/bin/sh
+
+# Automatically updates Arkenfox user.js.
+
+. $HOME/.local/lib/menu
+
+PROFILE="$HOME/.mozilla/firefox/1ly1rfyr.wsj"
+FIREFOX=firefox
+
+if command -v firefox-esr >/dev/null; then
+	FIREFOX=firefox-esr
+fi
+
+# Find the major version of the profile.
+profver="$(grep "LastVersion=" "$PROFILE/compatibility.ini" | cut -d= -f 2)"
+profver="${profver%%.*}"
+
+# Compare it to Firefox's.
+ffver="$($FIREFOX --version | cut -d' ' -f 3)"
+ffver="${ffver%%.*}"
+
+if [ "$ffver" != "$profver" ]; then
+	# Assuming we updated.
+	# Ask if we should update.
+	if confirm "Upgrade Arkenfox?"; then
+		"$PROFILE/updater.sh" -p "$PROFILE" -u
+		"$PROFILE/updater.sh" -p "$PROFILE" -se
+		{ cd "$PROFILE" && "$PROFILE/prefsCleaner.sh" -s; }
+	fi
+fi
+
+exec $FIREFOX $*

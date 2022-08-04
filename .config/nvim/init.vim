@@ -22,6 +22,7 @@ Plug 'tpope/vim-surround'
 
 " Langs:
 Plug 'ap/vim-css-color'
+Plug 'https://git.sr.ht/~sircmpwn/hare.vim'
 
 " LaTeX
 " Plug 'lervag/vimtex'
@@ -49,6 +50,8 @@ set scrolloff=4
 
 set ttyfast
 set lazyredraw
+
+set splitbelow splitright
 
 cnoreabbrev W! w!
 cnoreabbrev Q! q!

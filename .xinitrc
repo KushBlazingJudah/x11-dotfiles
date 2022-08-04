@@ -38,8 +38,13 @@ fi
 
 xset r rate 300 50 &
 
+#xrdb -merge <<EOF
+#st.borderpx: 8
+#EOF
+
 # I'd like to exec this but I need to cleanup runit before we leave.
 gpg-agent --daemon -- dwm
+#gpg-agent --daemon -- dwm -9
 
 usv force-stop ~/.local/var/sv/*
 usv exit ~/.local/var/sv/*

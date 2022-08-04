@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Menu library.
+
+DMENU="dmenu"
+
+# Displays a confirmation prompt.
+confirm() {
+	if [ "$(printf 'No\nYes\n' | "$DMENU" -l 2 -p "$1")" = "Yes" ]; then
+		return 0
+	fi
+	return 1
+}
