@@ -20,13 +20,18 @@
 *.color15: #3c3836
 
 dwm.background: #ebdbb2
+gtk.background: #ebdbb2
 *.background: bg
 *.foreground: fg
 
-*.normbgcolor: bg
-*.normbordercolor: bg
+*.normbgcolor: #fbf1c7
+*.normbordercolor: #fbf1c7
 *.normfgcolor: fg
 
 *.selbgcolor: fg
 *.selbordercolor: fg
 *.selfgcolor: bg
+
+xmenu.selbackground: fg
+xmenu.selforeground: bg
+slop.color: fg

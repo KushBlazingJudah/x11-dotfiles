@@ -20,6 +20,7 @@
 *.color15: #ebdbb2
 
 dwm.background: #1d2021
+gtk.background: #1d2021
 *.background: bg
 *.foreground: fg
 
@@ -30,3 +31,7 @@ dwm.background: #1d2021
 *.selbgcolor: fg
 *.selbordercolor: fg
 *.selfgcolor: bg
+
+xmenu.selbackground: fg
+xmenu.selforeground: bg
+slop.color: fg

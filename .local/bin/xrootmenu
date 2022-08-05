@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# Plan 9 styled root window menu.
+
+. $HOME/.local/lib/x
+
+menu() {
+cat <<EOF | sxmenu
+new
+resize
+move
+delete
+EOF
+}
+
+case "$(menu)" in
+	new)
+		exec st9 -G "$(sslop)"
+		;;
+	resize|move)
+		i="$(xdotool selectwindow)"
+		set -- $(sslop -f "%x %y %w %h")
+		xdotool windowmove --sync $i $1 $2 windowsize $i $3 $3
+		;;
+	delete)
+		xdotool selectwindow windowclose
+		;;
+esac

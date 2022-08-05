@@ -1,2 +1,8 @@
 *.font: monospace:size=10
 st.font: monospace:size=12
+
+xmenu.font: monospace:size=12
+xmenu.alignment: center
+xmenu.width: 0
+xmenu.borderWidth: 0
+slop.bordersize: 4

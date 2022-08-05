@@ -22,7 +22,7 @@ echo "$1" > "$WSJ_CONF_DIR/theme"
 
 setupxrdb
 
-mkbg "$(getxrdb dwm.background)"
+mkbg.tiled "$(getxrdb dwm.background)" "$(getxrdb dwm.color0)"
 setbg ~/.config/wall
 
 ~/.local/lib/setup/gtk

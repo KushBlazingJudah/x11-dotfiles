@@ -66,3 +66,14 @@ getxrdb() {
 		xrdb -n -get "$1"
 	fi
 }
+
+# Styled xmenu.
+sxmenu() {
+	xmenu -i -w $*
+}
+
+# Styled slop.
+sslop() {
+	slop -b "$(getxrdb slop.bordersize)" -c "$(printf '%s' $(getxrdb slop.color) | awk '/^#/ { print (sprintf("%d.0", ("0x" substr($0, 2, 2)))/256) "," (sprintf("%d.0", ("0x" substr($0, 4, 2)))/256) "," (sprintf("%d.0", ("0x" substr($0, 6, 2)))/256) }'),1.0" "$@"
+	unset r g b
+}

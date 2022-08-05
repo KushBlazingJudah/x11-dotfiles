@@ -11,6 +11,7 @@ fi
 cp -rf ~/.local/share/wsj/theme ~/.themes/wsjgtk
 mkdir ~/.config/dunst || true
 cp -f ~/.local/share/wsj/dunstrc ~/.config/dunst/dunstrc
+cp -f ~/.local/share/wsj/userContent.css ~/.mozilla/firefox/1ly1rfyr.wsj/chrome
 
 color() {
 	getxrdb "gtk.$1"
@@ -19,9 +20,8 @@ color() {
 sed -i -e "
       s|{background}|$(color background)|g
       s|{foreground}|$(color foreground)|g
-      s|{color0}|$(color background)|g
       s|{active}|$(color foreground)|g
-      s|{color15}|$(color foreground)|g
+      s|{color0}|$(color color0)|g
       s|{color1}|$(color color1)|g
       s|{color2}|$(color color2)|g
       s|{color3}|$(color color3)|g
@@ -36,7 +36,8 @@ sed -i -e "
       s|{color12}|$(color color12)|g
       s|{color13}|$(color color13)|g
       s|{color14}|$(color color14)|g
-" ~/.themes/wsjgtk/gtk-2.0/gtkrc ~/.themes/wsjgtk/gtk-3.0/gtk.css ~/.themes/wsjgtk/gtk-3.20/gtk.css ~/.config/dunst/dunstrc
+      s|{color15}|$(color color15)|g
+" ~/.themes/wsjgtk/gtk-2.0/gtkrc ~/.themes/wsjgtk/gtk-3.0/gtk.css ~/.themes/wsjgtk/gtk-3.20/gtk.css ~/.config/dunst/dunstrc ~/.mozilla/firefox/1ly1rfyr.wsj/chrome/userContent.css
 
 gsettings set org.gnome.desktop.interface gtk-theme ""
 gsettings set org.gnome.desktop.interface gtk-theme "wsjgtk"
