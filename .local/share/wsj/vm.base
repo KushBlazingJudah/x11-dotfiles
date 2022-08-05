@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+. $HOME/.local/lib/vm
+
+exec $(machine x86_64 kvm 2048 4) \
+	$(virtio hdd disk.img 8G) \
+	$(virtio net vm) \
+	-device virtio-rng-pci \
+	-name "vm" \
+	$@

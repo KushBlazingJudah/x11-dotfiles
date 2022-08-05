@@ -1,8 +1,8 @@
 :root {
-  --wsj-tab-bg: #282828;
-  --wsj-tab-active-bg: #ebdbb2;
-  --wsj-tab-fg: #ebdbb2;
-  --wsj-tab-active-fg: #282828;
+  --wsj-tab-bg: {color0};
+  --wsj-tab-active-bg: {foreground};
+  --wsj-tab-fg: {foreground};
+  --wsj-tab-active-fg: {color0};
 
   --tab-min-height: 22px !important;
   --wsj-tab-font-size: 0.9em;

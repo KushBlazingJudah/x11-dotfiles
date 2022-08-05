@@ -1,0 +1,52 @@
+#!/bin/sh -e
+
+. $HOME/.local/lib/variables
+. $HOME/.local/lib/menu
+
+boot=c
+cdp=
+menu_list() {
+	printf 'New\nBoot: %s\nCD: %s\n' "$boot" "$cdp"
+	for i in "$WSJ_DATA_DIR/vm/"*; do
+		case "$i" in
+			*\*)	return ;;
+			*)
+				if [ -z "$space" ]; then
+					space=1
+					printf '\n'
+				fi
+				;;
+		esac
+		printf '%s\n' "$(basename "$i")"
+	done
+}
+
+while :; do
+	unset space
+	sel="$(menu_list | dmenu -l 10 -p "vm")"
+
+	case "$sel" in
+		New)	name="$(ask "vm name")"
+			if [ -n "$name" ]; then
+				mkdir -p "$WSJ_DATA_DIR/vm/$name"
+				cp "$WSJ_DATA_DIR/vm.base" "$WSJ_DATA_DIR/vm/$name/start"
+			fi
+			;;
+		Boot:*)
+			case "$boot" in
+				c) boot="d" ;;
+				d) boot="c" ;;
+			esac
+			;;
+		CD:*)	cdp="$(ask "cd path")" ;;
+		*)
+			case "$cdp" in
+				~*) cdp="$HOME/${cdp#~*}" ;;
+			esac
+			if [ -e "$WSJ_DATA_DIR/vm/$sel/start" ]; then
+				cd "$WSJ_DATA_DIR/vm/$sel"
+				exec "$WSJ_DATA_DIR/vm/$sel/start" -boot "$boot" $([ -n "$cdp" ] && printf '-cdrom %s' "$cdp")
+			fi
+			;;
+	esac
+done

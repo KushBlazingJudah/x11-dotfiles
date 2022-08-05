@@ -1,78 +1,96 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Startpage</title>
-    <meta charset="UTF-8">
+	<head>
+		<title>Startpage</title>
+		<meta charset="UTF-8">
 
 <style>
 ::selection {
-  background: #d3869b;
+	background: var(--color13);
 }
 
 body {
-  font-family: monospace, monospace;
-  background: #282828;
-  color:      #ebdbb2;
-  height: 100vh;
-  margin: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+	font-family: monospace, monospace;
+	background: var(--color0);
+	color:			var(--foreground);
+	height: 100vh;
+	margin: auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
 }
 
 a, a:active, a:visited {
-  color: #b16286;
-  text-decoration: none;
+	color: var(--color5);
+	text-decoration: none;
 }
 
 h1, h2, h3, h4, h5 {
-  margin-bottom: .1rem;
+	margin-bottom: .1rem;
 }
 
 li {
-  list-style: none;
+	list-style: none;
 }
 
 #clock {
-  font-size: 8em;
-  float: left;
+	font-size: 8em;
 }
 
 #items {
-  float: right;
-  font-size: 2em;
+	font-size: 2em;
+}
+
+#items ul {
+	float: left;
 }
 
 </style>
-  </head>
+	</head>
 
-  <body>
-    <div id="clock">
-      --:--
-    </div>
-    <div id="items">
-      <ul>
-        <li><a href="https://lainchan.org/diy">/Δ/</a> <a href="https://fchan.xyz/prog">/prog/</a></li>
-        <li><a href="https://github.com">gh</a></li>
-        <li><a href="https://weather.gc.ca">weather</a></li>
-      </ul>
-    </div>
+	<body>
+		<div id="clock">
+			--:--
+		</div>
+		<br>
+		<div id="items">
+			<ul>
+				<li class="header">soc</li>
+				<li><a href="https://lainchan.org/diy">/Δ/</a></li>
+				<li><a href="https://dis.usagi.reisen/prog">/prog/</a></li>
+				<li><a href="https://boards.4channel.org/jp">/jp/</a></li>
+			</ul>
+			<ul>
+				<li class="header">media</li>
+				<li><a href="https://yewtu.be">yewtube</a></li>
+			</ul>
+			<ul>
+				<li class="header">dev</li>
+				<li><a href="https://github.com">github</a></li>
+			</ul>
+			<ul>
+				<li>life</li>
+				<li><a href="https://weather.gc.ca">weather</a></li>
+				<li><a href="https://cbc.ca/lite">cbc</a></li>
+			</ul>
+		</div>
 
-    <script>
-      (function () {
-        function setclock() {
-          let date = new Date();
-          let hr = date.getHours();
-          if (hr < 10)
-            hr = "0" + hr;
-          let min = date.getMinutes();
-          if (min < 10)
-            min = "0" + min;
-          document.getElementById("clock").innerHTML = `${hr}:${min}`;
-          setTimeout(setclock, 15000);
-        }
-        setclock();
-      })();
-    </script>
-  </body>
+		<script>
+			(function () {
+				function setclock() {
+					let date = new Date();
+					let hr = date.getHours();
+					if (hr < 10)
+						hr = "0" + hr;
+					let min = date.getMinutes();
+					if (min < 10)
+						min = "0" + min;
+					document.getElementById("clock").innerHTML = `${hr}:${min}`;
+					setTimeout(setclock, 15000);
+				}
+				setclock();
+			})();
+		</script>
+	</body>
 </html>

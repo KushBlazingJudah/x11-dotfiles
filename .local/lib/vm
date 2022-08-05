@@ -1,0 +1,25 @@
+#!/bin/sh
+
+. $HOME/.local/lib/common
+
+machine() {
+	printf 'qemu-system-%s -vga qxl' "$1"
+	case "$2" in
+		kvm) printf ' -enable-kvm -cpu host' ;;
+	esac
+	printf ' -m %d -smp %d' "$3" "$4"
+}
+
+virtio() {
+	case "$1" in
+		hdd)
+			printf '-drive file=%s,if=virtio' "$2"
+			if [ ! -e "$2" ] && [ -n "$3" ]; then
+				qemu-img create -f qcow2 "$2" "$3" >&2
+			fi
+			;;
+		cdr)	printf '-drive file=%s,media=cdrom,if=virtio' "$2" ;;
+		net) ;;#printf '-device virtio-net,netdev=vmnic -netdev user,id=vmnic' "$2" ;;
+		*) die "unknown virtio type \"$1\"" ;;
+	esac
+}

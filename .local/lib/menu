@@ -11,3 +11,8 @@ confirm() {
 	fi
 	return 1
 }
+
+# Asks for input.
+ask() {
+	"$DMENU" -p "$*" </dev/null
+}
