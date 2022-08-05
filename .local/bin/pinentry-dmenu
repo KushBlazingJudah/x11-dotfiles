@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# Hack wrapper script for gpg-agent pinentry
+
+printf 'OK Pleased to meet you\n'
+
+while read line; do
+	case "$line" in
+		BYE*) break ;;
+		SETDESC*)
+			KEYNAME=${line#*:%0A%22}
+			KEYNAME=${KEYNAME%\%22\%0A*}
+			KEYID=${line#*ID }
+			KEYID=${KEYID%,*}
+			printf 'OK\n'
+			;;
+		GETPIN*)
+			printf "D %s\nOK\n" "$(dmenu -P -p "gpg-agent: $KEYNAME ($KEYID)")"
+			;;
+		*) printf 'OK\n'
+	esac
+done

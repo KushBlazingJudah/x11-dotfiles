@@ -1,0 +1,41 @@
+#!/bin/sh -e
+
+# Simple script that does media functions.
+
+. $HOME/.local/lib/variables
+
+if [ -e "$XOB_FIFO" ]; then
+	sock="$XOB_FIFO"
+else
+	sock=/dev/null
+fi
+
+up() {
+	if [ "$1" = "1" ]; then
+		brightnessctl -m set +1 | cut -d, -f4 > $sock
+	else
+		brightnessctl -m set +5 | cut -d, -f4 > $sock
+	fi
+}
+
+down() {
+	if [ "$1" = "1" ]; then
+		brightnessctl -m set 1- | cut -d, -f4 > $sock
+	else
+		brightnessctl -m set 5- | cut -d, -f4 > $sock
+	fi
+}
+
+cmd="$1"
+shift 1
+case "$cmd" in
+	up)
+		up "$@"
+		;;
+	down)
+		down "$@"
+		;;
+	*)
+		exit 1
+		;;
+esac

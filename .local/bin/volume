@@ -1,30 +1,33 @@
-#!/bin/sh
+#!/bin/sh -e
 
 # Simple script that does media functions.
 
-# Hack, ported from Wayland
-if [ -z "$WOBSOCK" ]; then
-	WOBSOCK=/dev/null
+. $HOME/.local/lib/variables
+
+if [ -e "$XOB_FIFO" ]; then
+	sock="$XOB_FIFO"
+else
+	sock=/dev/null
 fi
 
 volup() {
 	if [ "$1" = "1" ]; then
-		amixer sset Master 1%+ | sed -En 's/.*\[([0-9]+)%\].*/\1/p' | head -1 > $WOBSOCK
+		amixer sset Master 1%+ | sed -En 's/.*\[([0-9]+)%\].*/\1/p' | head -1 > $sock
 	else
-		amixer sset Master 5%+ | sed -En 's/.*\[([0-9]+)%\].*/\1/p' | head -1 > $WOBSOCK
+		amixer sset Master 5%+ | sed -En 's/.*\[([0-9]+)%\].*/\1/p' | head -1 > $sock
 	fi
 }
 
 voldown() {
 	if [ "$1" = "1" ]; then
-		amixer sset Master 1%- | sed -En 's/.*\[([0-9]+)%\].*/\1/p' | head -1 > $WOBSOCK
+		amixer sset Master 1%- | sed -En 's/.*\[([0-9]+)%\].*/\1/p' | head -1 > $sock
 	else
-		amixer sset Master 5%- | sed -En 's/.*\[([0-9]+)%\].*/\1/p' | head -1 > $WOBSOCK
+		amixer sset Master 5%- | sed -En 's/.*\[([0-9]+)%\].*/\1/p' | head -1 > $sock
 	fi
 }
 
 volmute() {
-	amixer sset Master toggle | sed -En '/\[on\]/ s/.*\[([0-9]+)%\].*/\1/ p; /\[off\]/ s/.*/0/p' | head -1 > $WOBSOCK
+	amixer sset Master toggle | sed -En '/\[on\]/ s/.*\[([0-9]+)%\].*/\1/ p; /\[off\]/ s/.*/0/p' | head -1 > $sock
 }
 
 cmd="$1"

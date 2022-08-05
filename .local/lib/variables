@@ -1,0 +1,6 @@
+#!/bin/sh
+
+: ${WSJ_CONF_DIR:="$HOME/.config/wsj"}
+: ${WSJ_DATA_DIR:="$HOME/.local/share/wsj"}
+
+: ${XOB_FIFO:="$XDG_RUNTIME_DIR/xob.fifo"}

@@ -18,7 +18,7 @@ monioff() {
 
 # Set the background image to $1.
 setbg() {
-	hsetroot -fill "$1"
+	hsetroot -tile "$1"
 }
 
 # Set the Xft DPI
