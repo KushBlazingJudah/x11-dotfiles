@@ -1,5 +1,9 @@
 # WSJ's X11 dotfiles
 
+![desktop image](/.local/share/wsj/desktop.png)
+<br>
+![desktop -9 image](/.local/share/wsj/desktop9.png)
+
 These dotfiles are simply a rewrite of a rewrite of my original dotfiles.
 This time, I'm targeting (mostly) X11 even though I use Wayland, but I need
 dotfiles that support things Wayland doesn't really support yet.
@@ -24,14 +28,13 @@ Importantly, you'll want these custom builds of suckless tools:
 These four tools lay the foundation for my setup and countless others.
 My builds are patched somewhat heavily, but nothing terrible.
 
-Once everything is in place, run the files in `.local/lib/setup` where
-appropriate to complete your configuration.
-
-## TODO
-
-Revisit this list every once in a while.
-
 ## Setup
+
+See `wsj-set-desktop` in my [my Alpine repo](https://github.com/KushBlazingJudah/alpine-repo).
+Install the packages from there, build my Suckless builds, run `settheme
+gruvbox-dark`, and run everything in `~/.local/lib/setup`.
+
+Extra files:
 
 - `~/.local/private/location`: Latitude, longitude, and friendly name for a
   location. Tab separated, all on one line. Used for redshift and wttr.

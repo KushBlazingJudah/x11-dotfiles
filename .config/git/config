@@ -1,0 +1,15 @@
+[core]
+	hooksPath = ~/.config/git/hooks
+[alias]
+	A = commit --amend
+	a = add
+	C = checkout
+	c = commit
+	P = push
+	p = pull
+	r = reset
+	s = status
+[init]
+	defaultBranch = master
+[commit]
+	verbose = true

@@ -227,7 +227,7 @@ See the above repository for updates as well as full license text. */
 
 #TabsToolbar, #tabbrowser-tabs { background: var(--wsj-tab-bg) !important; }
 .tab-background[selected] { background: var(--wsj-tab-active-bg) !important; }
-.tab-content { font-size: var(--wsj-tab-font-size) !important; }
+.tab-content { font-size: var(--wsj-tab-font-size) !important; color: var(--wsj-tab-fg) !important; }
 .tab-content[selected] { color: var(--wsj-tab-active-fg) !important; }
 .tabbrowser-tab{ background: var(--wsj-tab-bg) !important; --lwt-tab-line-color: var(--wsj-tab-bg) !important; }
 .tabbrowser-tab[selected]{ --lwt-tab-line-color: var(--wsj-tab-active-bg) !important; }

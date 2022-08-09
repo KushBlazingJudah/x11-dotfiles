@@ -13,7 +13,9 @@ c() {
 }
 
 pkgs() {
-	if command -v apk >/dev/null; then
+	if command -v pacman >/dev/null; then
+		pacman -Q | wc -l
+	elif command -v apk >/dev/null; then
 		apk info | wc -l
 	else
 		printf 'unknown'

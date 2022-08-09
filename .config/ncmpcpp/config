@@ -1,10 +1,10 @@
-#visualizer_fifo_path = "/tmp/mpd.fifo"
+visualizer_fifo_path = "/dev/null"
 #visualizer_output_name = "toggle_visualizer"
 #visualizer_sync_interval = "20"
-visualizer_in_stereo = "yes"
-visualizer_type = "spectrum"
-visualizer_look = ●┃
-visualizer_color = cyan, white, black
+#visualizer_in_stereo = "yes"
+#visualizer_type = "spectrum"
+#visualizer_look = ●┃
+#visualizer_color = cyan, white, black
 
 colors_enabled = "yes"
 
@@ -18,9 +18,10 @@ song_columns_list_format = "(50)[blue]{ar} (50)[cyan]{t}"
 song_status_format = "{%t} - {%a}"
 now_playing_prefix = "{$b}"
 now_playing_suffix = "{$/b}"
-statusbar_visibility = "yes"
+statusbar_visibility = "no"
 header_visibility = "no"
 titles_visibility = "no"
+connected_message_on_startup = "no"
 
 # used primarily so the artist column isn't filled with stuff like this:
 # <artist>

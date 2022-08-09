@@ -1,0 +1,14 @@
+#!/bin/sh -e
+
+for file in $(git diff --cached --name-only --diff-filter=ACM | grep '\.go$'); do
+	if ! gofmt -l "$file"; then
+		printf 'Ignore? '
+		read -r v </dev/tty
+		case "$v" in
+			Y|y*) ;;
+			*) exit 1 ;;
+		esac
+	fi
+
+	git add "$file"
+done

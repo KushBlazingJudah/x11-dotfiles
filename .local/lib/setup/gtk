@@ -1,4 +1,4 @@
-#!/bin/sh -ex
+#!/bin/sh -e
 
 # Creates a GTK theme from internally stored files and Xresources.
 
