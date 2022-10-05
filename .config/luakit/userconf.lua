@@ -18,8 +18,8 @@ engines.default = "https://searx.be/search?q=%s"
 noscript.enable_scripts = false
 noscript.enable_plugins = false
 
-webview.add_signal("init", function (view)
-	view:add_signal("navigation-request", function (v, uri)
+webview.add_signal("init", function (v)
+	v:add_signal("navigation-request", function (view, uri)
 		local url = uri:gsub("^([%w][%w%+%-%.]*)%:", "")
 		local domain, path
 		url = url:gsub("^//([^/]*)", function(e)

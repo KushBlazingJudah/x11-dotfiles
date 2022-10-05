@@ -1,0 +1,12 @@
+#!/bin/sh -e
+
+# plays a random album in mpd
+
+mpc clear >/dev/null
+
+mpc listall -f "%albumartist%	%album%" | uniq | shuf | while IFS="	" read -r aa a; do
+	echo "$aa - $a"
+	mpc findadd albumartist "$aa" album "$a" >/dev/null
+	mpc play >/dev/null
+	break
+done

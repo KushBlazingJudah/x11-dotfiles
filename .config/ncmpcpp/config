@@ -1,10 +1,8 @@
-visualizer_fifo_path = "/dev/null"
-#visualizer_output_name = "toggle_visualizer"
-#visualizer_sync_interval = "20"
-#visualizer_in_stereo = "yes"
-#visualizer_type = "spectrum"
-#visualizer_look = ●┃
-#visualizer_color = cyan, white, black
+visualizer_data_source = "/tmp/mpd.fifo"
+visualizer_in_stereo = "no"
+visualizer_type = "spectrum"
+visualizer_look = "▋▋"
+visualizer_color = "white"
 
 colors_enabled = "yes"
 

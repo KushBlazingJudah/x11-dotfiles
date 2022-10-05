@@ -84,11 +84,11 @@
 #def_key "right"
 #  slave_screen
 #
-#def_key "right"
-#  volume_up
+def_key "right"
+  dummy
 #
-#def_key "+"
-#  volume_up
+def_key "+"
+  dummy
 #
 #def_key "left"
 #  previous_column
@@ -96,11 +96,11 @@
 #def_key "left"
 #  master_screen
 #
-#def_key "left"
-#  volume_down
+def_key "left"
+  dummy
 #
-#def_key "-"
-#  volume_down
+def_key "-"
+  dummy
 #
 #def_key ":"
 #  execute_command
@@ -404,8 +404,6 @@
 
 def_key "+"
     show_clock
-def_key "="
-    volume_up
 
 def_key "j"
     scroll_down

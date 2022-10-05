@@ -14,7 +14,7 @@ Such as:
 - ...and probably others
 
 These dotfiles are spread across several repositories.
-Importantly, you'll want these custom builds of suckless tools:
+Importantly, you'll want these tools:
 
 - [dmenu](https://github.com/KushBlazingJudah/dmenu)
 - [dwm](https://github.com/KushBlazingJudah/dwm)
@@ -25,8 +25,8 @@ Importantly, you'll want these custom builds of suckless tools:
 *All are packaged in
 [my Alpine repo](https://github.com/KushBlazingJudah/alpine-repo)*
 
-These four tools lay the foundation for my setup and countless others.
-My builds are patched somewhat heavily, but nothing terrible.
+These five tools lay the foundation for my setup and countless others.
+My suckless builds are patched somewhat heavily, but nothing terrible.
 
 ## Setup
 

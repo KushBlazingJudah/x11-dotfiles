@@ -21,11 +21,12 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'tpope/vim-surround'
 
 " Langs:
-Plug 'ap/vim-css-color'
+" Plug 'ap/vim-css-color'
 Plug 'https://git.sr.ht/~sircmpwn/hare.vim'
+Plug 'bakpakin/fennel.vim'
 
 " LaTeX
-" Plug 'lervag/vimtex'
+Plug 'lervag/vimtex'
 
 call plug#end()
 
@@ -47,6 +48,7 @@ set nowrap
 set magic
 set laststatus=0 ruler
 set scrolloff=4
+set updatetime=300
 
 set ttyfast
 set lazyredraw
@@ -84,10 +86,6 @@ noremap <leader>h <C-w>h
 "" Vmap for maintain Visual Mode after shifting > and <
 vmap < <gv
 vmap > >gv
-
-" Terminal
-" Change <C-\><C-n> to something better.
-tnoremap <Esc> <C-\><C-n>
 
 "autocmd! User GoyoEnter Limelight
 "autocmd! User GoyoLeave Limelight!

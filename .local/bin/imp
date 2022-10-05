@@ -3,10 +3,16 @@
 # Simple video condenser from subtitles, like immersionpod but in POSIX sh and
 # less shit (but probably still quite shit)
 # Needs ffmpeg.
+#
+# There's a known problem; probably as a result of the awk script and ffmpeg,
+# but you may find some very small segments repeated at the end of some
+# sentences.
+# If this bothers you, too bad. It bothers me but I haven't gotten around to
+# really using this script until as of writing.
 
 # CONFIGURATION
 langs="jpn"
-sublangs="eng"
+sublangs="eng jpn"
 bitrate="64k"
 outdir="$HOME/mus/immersionpod"
 ndays=7
@@ -34,22 +40,17 @@ die() {
 # output: "id,lang" where lang is an ISO 639 abbreviation
 # return code: 0 if successful, 1 if not (for informative error messages)
 best_track() {
-	_langs="$*" # hack.
 	while IFS=, read -r id lang; do
 		# Loop over the array variable.
-		while [ "$#" -gt 0 ]; do
-			if [ "$lang" = "$1" ]; then
+		for i in "$@"; do
+			if [ "$lang" = "$i" ]; then
 				# We found a suitable match.
 				echo "$id,$lang"
 				return
 			fi
-			shift
 		done
 
 		# If we made it here, there are no languages that fit this track.
-		# Repopulate $* and move on.
-		# shellcheck disable=SC2086
-		set -- $_langs
 	done
 
 	# Nothing suitable.
@@ -73,7 +74,7 @@ tracks() {
 		*)	die "tracks: only support subtitles and audio" ;;
 	esac
 	shift
-	ffprobe -loglevel error -select_streams "$arg" -show_entries stream=index:stream_tags=language -of csv=p=0 -- "$1" || die "tracks subtitles: failed extracting"
+	ffprobe -loglevel error -select_streams "$arg" -show_entries stream=index:stream_tags=language -of csv=p=0 -- "$1" || die "tracks $1: failed extracting"
 }
 
 # Extracts a track from a file into stdout.
@@ -172,7 +173,7 @@ make_output() {
 	{
 		echo "ffconcat version 1.0"
 		while IFS=, read -r start end; do
-		cat <<EOF
+			cat <<EOF
 file '$1'
 inpoint $start
 outpoint $end
