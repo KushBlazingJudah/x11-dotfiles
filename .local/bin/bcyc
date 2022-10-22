@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# bandcamp.com/yum code checker.
+# Ignore how it looks, I just ripped a request out of Firefox and chucked it
+# into printf and curl.
+#
+# Returns 0 if the code is valid, otherwise 1 and a reason why to stderr.
+
+printf '{"is_corp":true,"band_id":null,"platform_closed":false,"hard_to_download":false,"fan_logged_in":true,"band_url":null,"was_logged_out":null,"is_https":true,"ref_url":null,"code":"%s"}' "$1" | \
+	curl -fsd @- https://bandcamp.com/api/codes/1/verify | \
+	jq 'if .ok == false then .errors[]?.reason+"\n"|halt_error(1) else .ok end'

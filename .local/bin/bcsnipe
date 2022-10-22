@@ -1,0 +1,16 @@
+#!/bin/sh -e
+
+# Hack to find valid Bandcamp codes straight from a text file with them in there.
+# Some labels I subscribe to send codes straight to my email, so instead of
+# doing the hard work of copy and pasting into bandcamp.com/yum, this tries
+# every code it finds until it finds one that works.
+# The results are shuffled as the ones at the top are already gone by the time
+# you see them.
+
+grep -v "bandcamp.com" | grep -o "[[:alnum:]]\{4\}-[[:alnum:]]\{4\}" | shuf | while read -r line; do
+	if bcyc "$line" 2>/dev/null; then
+		printf '%s\n' "$line"
+		exit
+	fi
+	sleep 1
+done
